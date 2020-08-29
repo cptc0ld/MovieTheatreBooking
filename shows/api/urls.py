@@ -3,4 +3,5 @@ from .views import ViewShows
 
 urlpatterns = [
     path('shows/', ViewShows.as_view()),
+
 ]
