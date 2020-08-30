@@ -32,14 +32,39 @@ class ViewCustomersbyTid(APIView):
 
 class TicketBooking(APIView):
     def get(self, request, format=None):
+        try:
+            time = request.query_params["time"]
+        except:
+            response = {
+                'Message': 'Enter time'
+            }
+            return Response(response)
+        try:
+            date_time_obj = datetime.strptime(
+                time, '%H:%M:%S %Y-%m-%d')
+        except:
+            response = {
+                'Message': 'Enter valid time'
+            }
+            return Response(response)
 
-        time = request.query_params["time"]
-        date_time_obj = datetime.strptime(
-            time, '%H:%M:%S %Y-%m-%d')
-
-        show = ShowModel.Shows.objects.filter(
-            StartTime=date_time_obj).get().showid
-        ticket = Ticket.objects.filter(ShowId=show)
+        try:
+            show = ShowModel.Shows.objects.filter(
+                StartTime=date_time_obj).get().showid
+        except:
+            response = {
+                'Message': 'No shows found'
+            }
+            return Response(response)
+        if(show == None):
+            return Response('{"message": "no movie availabe"}')
+        try:
+            ticket = Ticket.objects.filter(ShowId=show)
+        except:
+            response = {
+                'Message': 'No ticket found'
+            }
+            return Response(response)
         serializers = TicketSerializer(ticket, many=True)
         return Response(serializers.data)
 
@@ -53,14 +78,30 @@ class TicketBooking(APIView):
                 username=request.data["username"], phone=request.data["phone"])
             customer.save()
             customerno = customer.phone
+        try:
+            time = request.data["starttime"]
+        except:
+            response = {
+                'Message': 'Enter time'
+            }
+            return Response(response)
 
-        time = request.data["starttime"]
-
-        date_time_obj = datetime.strptime(
-            time, '%H:%M:%S %Y-%m-%d')
-        show = ShowModel.Shows.objects.filter(
-            MovieName=request.data["moviename"]).filter(StartTime=date_time_obj).get().showid
-
+        try:
+            date_time_obj = datetime.strptime(
+                time, '%H:%M:%S %Y-%m-%d')
+        except:
+            response = {
+                'Message': 'Enter valid time'
+            }
+            return Response(response)
+        try:
+            show = ShowModel.Shows.objects.filter(
+                MovieName=request.data["moviename"]).filter(StartTime=date_time_obj).get().showid
+        except:
+            response = {
+                'Message': 'No shows found'
+            }
+            return Response(response)
         if(show == None):
             return Response('{"message": "no movie availabe"}')
 
@@ -101,14 +142,32 @@ class TicketBooking(APIView):
         })
 
     def put(self, request, id, format=None):
-        time = request.data["time"]
+        try:
+            time = request.data["time"]
+        except:
+            response = {
+                'Message': 'Enter time'
+            }
+            return Response(response)
 
-        date_time_obj = datetime.strptime(
-            time, '%H:%M:%S %Y-%m-%d')
-
-        ticket = Ticket.objects.get(TicketId=id)
-        show = ShowModel.Shows.objects.filter(
-            showid=ticket.ShowId).get()
+        try:
+            date_time_obj = datetime.strptime(
+                time, '%H:%M:%S %Y-%m-%d')
+        except:
+            response = {
+                'Message': 'Enter valid time'
+            }
+            return Response(response)
+        try:
+            ticket = Ticket.objects.get(TicketId=id)
+    
+            show = ShowModel.Shows.objects.filter(
+                showid=ticket.ShowId).get()
+        except: 
+            response = {
+                'Message': 'Ticket not found'
+            }
+            return Response(response)
         show.StartTime = date_time_obj
 
         show.save()
