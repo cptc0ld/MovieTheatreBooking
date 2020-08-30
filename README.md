@@ -10,7 +10,7 @@ This is an API service for Movie Theatre Ticket Booking
 
     python manage.py runserver
 
-## Run the tests
+## Run the tests <a name = "8"></a>
 
     ./run-tests.sh
 
@@ -22,14 +22,14 @@ This is an API service for Movie Theatre Ticket Booking
 -   An endpoint to delete a particular ticket. [Solution](#4)
 -   An endpoint to view the user’s details based on the ticket id. [Solution](#5)
 -   Mark a ticket as expired if there is a diff of 8 hours between the ticket timing and current time. [Solution](#6)
--   Delete all the tickets which are expired automatically.
--   Write the tests for all the endpoints. [Solution](#7)
+-   Delete all the tickets which are expired automatically. [Solution](#7)
+-   Write the tests for all the endpoints. [Solution](#8)
 
 # REST API
 
 ## Get list of Customers
 
-### Request <a name = "1"></a>
+### Request
 
 `GET /api/customers/`
 
@@ -57,7 +57,7 @@ This is an API service for Movie Theatre Ticket Booking
         }
     ]
 
-## Get details of customer using Ticket Id
+## Get details of customer using Ticket Id <a name = "5"></a>
 
 ### Request
 
@@ -97,7 +97,7 @@ This is an API service for Movie Theatre Ticket Booking
         }
     ]
 
-## Book a ticket
+## Book a ticket <a name = "1"></a>
 
 ### Request
 
@@ -129,7 +129,7 @@ This is an API service for Movie Theatre Ticket Booking
         "TicketId": "34f58ebd-b512-4981-8604-94556b5b9324"
     }
 
-## Delete Ticket using Tid
+## Delete Ticket using Tid <a name = "4"></a>
 
 ### Request
 
@@ -145,7 +145,7 @@ This is an API service for Movie Theatre Ticket Booking
         "Message": "Deleted Ticket with Tid: 34f58ebd-b512-4981-8604-94556b5b9324"
     }
 
-## Update Show timings for a given Ticket
+## Update Show timings for a given Ticket <a name = "2"></a>
 
 ### Request
 
@@ -171,7 +171,7 @@ This is an API service for Movie Theatre Ticket Booking
         "Message"   :   "Updated timing for this ticket to 14:54:55 2020-08-29"
     }
 
-## View shows
+## View shows (All/Particular TIme) <a name = "3"></a>
 
 ### Request
 
@@ -206,7 +206,7 @@ This is an API service for Movie Theatre Ticket Booking
         }
     ]
 
-## Mark tickets as expired
+## Mark tickets as expired <a name = "6"></a>
 
 ### Request
 
@@ -235,7 +235,7 @@ This is an API service for Movie Theatre Ticket Booking
         }
     ]
 
-## Delete expired tickets
+## Delete expired tickets <a name = "7"></a>
 
 ### Request
 
