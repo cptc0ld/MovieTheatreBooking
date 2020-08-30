@@ -4,7 +4,11 @@ This is an API service for Movie Theatre Ticket Booking
 
 ## Install
 
-    pip install -r requirements.txt
+    - Create Virtual environment
+        python3 -m venv env
+        env\Scripts\activate (for cmd)
+    - Install all packages in Virtual environment
+        pip install -r requirements.txt
 
 ## Run the app
 
