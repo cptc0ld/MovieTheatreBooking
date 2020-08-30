@@ -29,9 +29,14 @@ This is an API service for Movie Theatre Ticket Booking
 -   Delete all the tickets which are expired automatically. [Solution](#7)
 -   Write the tests for all the endpoints. [Solution](#8)
 
+```
+Point to note:
+Both solution approach 6 and 7 are done using threading
+```
+
 # REST API
 
-Postman SS for all Endpoint [link](postmanSS/README.md)
+Postman SS for all endpoint [link](postmanSS/README.md)
 
 ## Add Shows
 
