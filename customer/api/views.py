@@ -53,19 +53,31 @@ class TicketBooking(APIView):
                 username=request.data["username"], phone=request.data["phone"])
             customerno = customer.phone
 
+        time = request.data["starttime"]
+
+        date_time_obj = datetime.strptime(
+            time, '%H:%M:%S %Y-%m-%d')
         show = ShowModel.Shows.objects.filter(
-            MovieName=request.data["moviename"]).filter(StartTime=request.data["starttime"]).filter(Date=request.data["date"]).get().showid
+            MovieName=request.data["moviename"]).filter(StartTime=date_time_obj).get().showid
 
         if(show == None):
             return Response('{"message": "no movie availabe"}')
 
         print(customerno)
 
-        NewTicket = Ticket.objects.create(ShowId=show, CustomerId=customerno)
-        NewTicket.save()
         tempshow = ShowModel.Shows.objects.get(showid=show)
+        if(tempshow.count == 0):
+            response = {
+                'Message': 'All tickets booked'
+            }
+            return Response(response)
+
         tempshow.count -= 1
         tempshow.save()
+
+        NewTicket = Ticket.objects.create(ShowId=show, CustomerId=customerno)
+        NewTicket.save()
+
         response = {
             'TicketId': NewTicket.TicketId
         }

@@ -11,3 +11,4 @@ class Shows(models.Model):
     Duration = models.CharField(max_length=20, blank=False)
     StartTime = models.DateTimeField(max_length=20, blank=False)
     count = models.IntegerField(default=20)
+    IsExpired = models.BooleanField(default=False)
