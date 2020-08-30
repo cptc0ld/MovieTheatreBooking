@@ -15,8 +15,9 @@ class ViewShows(APIView):
             return Response(serializers.data)
         try:
             time = request.query_params["time"]
-            date = request.query_params["date"]
-            shows = Shows.objects.filter(StartTime=time).filter(Date=date)
+            date_time_obj = datetime.datetime.strptime(
+                time, '%H:%M:%S %Y-%m-%d')
+            shows = Shows.objects.filter(StartTime=time)
         except:
             shows = {
                 'message': "Fields Missing..."
