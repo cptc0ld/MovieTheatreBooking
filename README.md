@@ -31,6 +31,8 @@ This is an API service for Movie Theatre Ticket Booking
 
 # REST API
 
+Postman SS for all Endpoint [link](postmanSS/README.md)
+
 ## Add Shows
 
 ### Request
