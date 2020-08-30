@@ -27,6 +27,55 @@ This is an API service for Movie Theatre Ticket Booking
 
 # REST API
 
+## Add Shows
+
+### Request
+
+`POST /api/addshows/`
+
+### Payload
+
+    {
+        "moviename" ,
+        "screen" ,
+        "duration" ,
+        "starttime"
+    }
+
+### Example
+
+    curl --location --request POST 'http://127.0.0.1:8000/api/addshows/' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "moviename" : "3 Idiots",
+        "screen" : "2",
+        "duration" : "120",
+        "starttime" : "00:00:00 2020-08-30"
+    }'
+
+#### Response
+
+    [
+        {
+            "showid": "019a25e2-b063-4fe2-bf7a-880a27eceb62",
+            "MovieName": "Om Shanti Om",
+            "Screen": "2",
+            "Duration": "180",
+            "StartTime": "2020-08-30T20:33:36Z",
+            "count": 20,
+            "IsExpired": false
+        },
+        {
+            "showid": "9f5072d5-391c-4128-a70b-1e0441cd36d5",
+            "MovieName": "3 Idiots",
+            "Screen": "2",
+            "Duration": "120",
+            "StartTime": "2020-08-30T00:00:00Z",
+            "count": 20,
+            "IsExpired": false
+        }
+    ]
+
 ## Get list of Customers
 
 ### Request

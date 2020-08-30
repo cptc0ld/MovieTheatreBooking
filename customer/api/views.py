@@ -56,10 +56,11 @@ class TicketBooking(APIView):
                 'Message': 'No shows found'
             }
             return Response(response)
-        if(show == None):
-            return Response('{"message": "no movie availabe"}')
+
         try:
             ticket = Ticket.objects.filter(ShowId=show)
+            serializers = TicketSerializer(ticket, many=True)
+            return Response(serializers.data)
         except:
             response = {
                 'Message': 'No ticket found'
@@ -131,7 +132,7 @@ class TicketBooking(APIView):
             show = ShowModel.Shows.objects.get(showid=ticket.ShowId)
             show.count += 1
             show.save()
-        except Ticket.DoesNotExist:
+        except (Ticket.DoesNotExist, ShowModel.Shows.DoesNotExist):
             return Response({
                 "Message": str(id) + " Does not Exist"
             })
@@ -160,10 +161,10 @@ class TicketBooking(APIView):
             return Response(response)
         try:
             ticket = Ticket.objects.get(TicketId=id)
-    
+
             show = ShowModel.Shows.objects.filter(
                 showid=ticket.ShowId).get()
-        except: 
+        except:
             response = {
                 'Message': 'Ticket not found'
             }

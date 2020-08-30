@@ -6,9 +6,51 @@ import datetime
 from datetime import timezone
 
 
+class CreateShows(APIView):
+
+    def post(self, request, format=None):
+        try:
+            movie = request.data["moviename"]
+            screen = request.data["screen"]
+            dur = request.data["duration"]
+            time = request.data["starttime"]
+        except:
+            shows = {
+                'message': "all parameter required"
+            }
+            return Response(shows)
+        try:
+            date_time_obj = datetime.datetime.strptime(
+                time, '%H:%M:%S %Y-%m-%d')
+        except:
+            shows = {
+                'message': "Enter Valid date time format(%H:%M:%S %Y-%m-%d)"
+            }
+            return Response(shows)
+        try:
+            show = Shows.objects.create(
+                MovieName=movie, Screen=screen, Duration=dur, StartTime=date_time_obj)
+            show.save()
+        except:
+            shows = {
+                'message': "Unknown error"
+            }
+            return Response(shows)
+        shows = Shows.objects.all()
+        serializers = ShowSerializer(shows, many=True)
+        return Response(serializers.data)
+
+
 class ViewShows(APIView):
 
     def get(self, request, format=None):
+        try:
+            request.query_params["all"]
+        except:
+            shows = {
+                'message': "all parameter required"
+            }
+            return Response(shows)
         if(request.query_params["all"] == "true"):
             shows = Shows.objects.all()
             serializers = ShowSerializer(shows, many=True)
@@ -17,10 +59,16 @@ class ViewShows(APIView):
             time = request.query_params["time"]
             date_time_obj = datetime.datetime.strptime(
                 time, '%H:%M:%S %Y-%m-%d')
-            shows = Shows.objects.filter(StartTime=time)
         except:
             shows = {
-                'message': "Fields Missing..."
+                'message': "Enter Valid date time format(%H:%M:%S %Y-%m-%d)"
+            }
+            return Response(shows)
+        try:
+            shows = Shows.objects.filter(StartTime=date_time_obj)
+        except:
+            shows = {
+                'message': "No shows available"
             }
             return Response(shows)
         serializers = ShowSerializer(shows, many=True)
