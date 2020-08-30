@@ -51,6 +51,7 @@ class TicketBooking(APIView):
         except Customer.DoesNotExist:
             customer = Customer.objects.create(
                 username=request.data["username"], phone=request.data["phone"])
+            customer.save()
             customerno = customer.phone
 
         time = request.data["starttime"]

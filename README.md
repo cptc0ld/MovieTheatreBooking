@@ -12,7 +12,7 @@ This is an API service for Movie Theatre Ticket Booking
 
 ## Run the tests <a name = "8"></a>
 
-    ./run-tests.sh
+    python manage.py test
 
 # Solution Approach
 
@@ -253,13 +253,13 @@ This is an API service for Movie Theatre Ticket Booking
 
     (All Tickets)
     [
-    {
-        "showid": "720dc4f5-1df2-4686-8f31-702aca10e9f9",
-        "MovieName": "Om Shanti Om",
-        "Screen": "2",
-        "Duration": "180",
-        "StartTime": "2020-08-30T16:13:36Z",
-        "count": 20,
-        "IsExpired": false
-    }
+        {
+            "showid": "720dc4f5-1df2-4686-8f31-702aca10e9f9",
+            "MovieName": "Om Shanti Om",
+            "Screen": "2",
+            "Duration": "180",
+            "StartTime": "2020-08-30T16:13:36Z",
+            "count": 20,
+            "IsExpired": false
+        }
     ]
