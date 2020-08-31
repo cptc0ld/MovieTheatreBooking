@@ -1,6 +1,6 @@
 # REST API for Movie Booking
 
-This is an REST-API service for Movie Theatre Ticket Booking made with Django
+This is a REST-API service for Movie Theatre Ticket Booking made with Django
 
 ## Install
 
