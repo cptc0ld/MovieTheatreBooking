@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.parsers import JSONParser
 from ..models import Customer, Ticket
 import shows.models as ShowModel
@@ -13,7 +14,7 @@ class ViewCustomers(APIView):
     def get(self, request, format=None):
         customers = Customer.objects.all()
         serializers = CustomerSerializer(customers, many=True)
-        return Response(serializers.data)
+        return Response(serializers.data, status=status.HTTP_200_OK)
 
 
 class ViewCustomersbyTid(APIView):
@@ -27,7 +28,7 @@ class ViewCustomersbyTid(APIView):
             })
         customers = Customer.objects.filter(id=ticket.CustomerId)
         serializers = CustomerSerializer(customers, many=True)
-        return Response(serializers.data)
+        return Response(serializers.data, status=status.HTTP_200_OK)
 
 
 class TicketBooking(APIView):
@@ -38,7 +39,7 @@ class TicketBooking(APIView):
             response = {
                 'Message': 'Enter time'
             }
-            return Response(response)
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
         try:
             date_time_obj = datetime.strptime(
                 time, '%H:%M:%S %Y-%m-%d')
@@ -46,7 +47,7 @@ class TicketBooking(APIView):
             response = {
                 'Message': 'Enter valid time'
             }
-            return Response(response)
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             show = ShowModel.Shows.objects.filter(
@@ -55,7 +56,7 @@ class TicketBooking(APIView):
             response = {
                 'Message': 'No shows found'
             }
-            return Response(response)
+            return Response(response, status=status.HTTP_204_NO_CONTENT)
 
         try:
             ticket = Ticket.objects.filter(ShowId=show)
@@ -67,7 +68,7 @@ class TicketBooking(APIView):
             }
             return Response(response)
         serializers = TicketSerializer(ticket, many=True)
-        return Response(serializers.data)
+        return Response(serializers.data, status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request, format=None):
         # data = TicketSerializer(request.data, many=True)
@@ -85,7 +86,7 @@ class TicketBooking(APIView):
             response = {
                 'Message': 'Enter time'
             }
-            return Response(response)
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             date_time_obj = datetime.strptime(
@@ -94,7 +95,7 @@ class TicketBooking(APIView):
             response = {
                 'Message': 'Enter valid time'
             }
-            return Response(response)
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
         try:
             show = ShowModel.Shows.objects.filter(
                 MovieName=request.data["moviename"]).filter(StartTime=date_time_obj).get().showid
@@ -102,9 +103,9 @@ class TicketBooking(APIView):
             response = {
                 'Message': 'No shows found'
             }
-            return Response(response)
+            return Response(response, status=status.HTTP_200_OK)
         if(show == None):
-            return Response('{"message": "no movie availabe"}')
+            return Response('{"message": "no movie availabe"}', status=status.HTTP_204_NO_CONTENT)
 
         print(customerno)
 
@@ -113,7 +114,7 @@ class TicketBooking(APIView):
             response = {
                 'Message': 'All tickets booked'
             }
-            return Response(response)
+            return Response(response, status=status.HTTP_200_OK)
 
         tempshow.count -= 1
         tempshow.save()
@@ -124,7 +125,7 @@ class TicketBooking(APIView):
         response = {
             'TicketId': NewTicket.TicketId
         }
-        return Response(response)
+        return Response(response, status=status.HTTP_200_OK)
 
     def delete(self, request, id, format=None):
         try:
@@ -135,12 +136,12 @@ class TicketBooking(APIView):
         except (Ticket.DoesNotExist, ShowModel.Shows.DoesNotExist):
             return Response({
                 "Message": str(id) + " Does not Exist"
-            })
+            }, status=status.HTTP_400_BAD_REQUEST)
         ticket.delete()
 
         return Response({
             "Message": "Deleted Ticket with Tid: " + str(id)
-        })
+        }, status=status.HTTP_200_OK)
 
     def put(self, request, id, format=None):
         try:
@@ -149,7 +150,7 @@ class TicketBooking(APIView):
             response = {
                 'Message': 'Enter time'
             }
-            return Response(response)
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             date_time_obj = datetime.strptime(
@@ -158,7 +159,7 @@ class TicketBooking(APIView):
             response = {
                 'Message': 'Enter valid time'
             }
-            return Response(response)
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
         try:
             ticket = Ticket.objects.get(TicketId=id)
 
@@ -168,10 +169,10 @@ class TicketBooking(APIView):
             response = {
                 'Message': 'Ticket not found'
             }
-            return Response(response)
+            return Response(response, status=status.HTTP_204_NO_CONTENT)
         show.StartTime = date_time_obj
 
         show.save()
         return Response({
             "Message": "Updated timing for this ticket to " + time
-        })
+        }, status=status.HTTP_200_OK)

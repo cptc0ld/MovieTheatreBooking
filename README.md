@@ -1,6 +1,6 @@
 # REST API for Movie Booking
 
-This is an API service for Movie Theatre Ticket Booking
+This is a REST-API service for Movie Theatre Ticket Booking
 
 ## Install
 

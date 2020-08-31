@@ -4,6 +4,15 @@ from ..models import Shows
 from .serializers import ShowSerializer
 import datetime
 from datetime import timezone
+from rest_framework import status
+
+
+class Home(APIView):
+    def get(self, request, format=None):
+        res = {
+            "Message": "Welcome"
+        }
+        return Response(res, status=status.HTTP_200_OK)
 
 
 class CreateShows(APIView):
@@ -18,7 +27,7 @@ class CreateShows(APIView):
             shows = {
                 'message': "all parameter required"
             }
-            return Response(shows)
+            return Response(shows, status=status.HTTP_400_BAD_REQUEST)
         try:
             date_time_obj = datetime.datetime.strptime(
                 time, '%H:%M:%S %Y-%m-%d')
@@ -26,7 +35,7 @@ class CreateShows(APIView):
             shows = {
                 'message': "Enter Valid date time format(%H:%M:%S %Y-%m-%d)"
             }
-            return Response(shows)
+            return Response(shows, status=status.HTTP_400_BAD_REQUEST)
         try:
             show = Shows.objects.create(
                 MovieName=movie, Screen=screen, Duration=dur, StartTime=date_time_obj)
@@ -35,10 +44,10 @@ class CreateShows(APIView):
             shows = {
                 'message': "Unknown error"
             }
-            return Response(shows)
+            return Response(shows, status=status.HTTP_400_BAD_REQUEST)
         shows = Shows.objects.all()
         serializers = ShowSerializer(shows, many=True)
-        return Response(serializers.data)
+        return Response(serializers.data, status=status.HTTP_200_OK)
 
 
 class ViewShows(APIView):
@@ -50,11 +59,11 @@ class ViewShows(APIView):
             shows = {
                 'message': "all parameter required"
             }
-            return Response(shows)
+            return Response(shows, status=status.HTTP_400_BAD_REQUEST)
         if(request.query_params["all"] == "true"):
             shows = Shows.objects.all()
             serializers = ShowSerializer(shows, many=True)
-            return Response(serializers.data)
+            return Response(serializers.data, status=status.HTTP_200_OK)
         try:
             time = request.query_params["time"]
             date_time_obj = datetime.datetime.strptime(
@@ -63,16 +72,16 @@ class ViewShows(APIView):
             shows = {
                 'message': "Enter Valid date time format(%H:%M:%S %Y-%m-%d)"
             }
-            return Response(shows)
+            return Response(shows, status=status.HTTP_400_BAD_REQUEST)
         try:
             shows = Shows.objects.filter(StartTime=date_time_obj)
         except:
             shows = {
                 'message': "No shows available"
             }
-            return Response(shows)
+            return Response(shows, status=status.HTTP_204_NO_CONTENT)
         serializers = ShowSerializer(shows, many=True)
-        return Response(serializers.data)
+        return Response(serializers.data, status=status.HTTP_200_OK)
 
 
 class checkExpired(APIView):
@@ -80,10 +89,16 @@ class checkExpired(APIView):
     def get(self, request, format=None):
         shows = Shows.objects.all()
         serializers = ShowSerializer(shows, many=True)
-        return Response(serializers.data)
+        return Response(serializers.data, status=status.HTTP_200_OK)
 
     def put(self, request, format=None):
-        shows = Shows.objects.filter(IsExpired=False)
+        try:
+            shows = Shows.objects.filter(IsExpired=False)
+        except Shows.DoesNotExist:
+            shows = {
+                'message': "No shows available"
+            }
+            return Response(shows, status=status.HTTP_204_NO_CONTENT)
         for show in shows:
             time = show.StartTime
 
@@ -94,12 +109,18 @@ class checkExpired(APIView):
                 show.IsExpired = True
                 show.save()
         serializers = ShowSerializer(shows, many=True)
-        return Response(serializers.data)
+        return Response(serializers.data, status=status.HTTP_200_OK)
 
     def delete(self, request, format=None):
-        shows = Shows.objects.filter(IsExpired=True)
+        try:
+            shows = Shows.objects.filter(IsExpired=True)
+        except Shows.DoesNotExist:
+            shows = {
+                'message': "No shows available"
+            }
+            return Response(shows, status=status.HTTP_204_NO_CONTENT)
         for show in shows:
             show.delete()
         shows = Shows.objects.all()
         serializers = ShowSerializer(shows, many=True)
-        return Response(serializers.data)
+        return Response(serializers.data, status=status.HTTP_200_OK)
